@@ -18,14 +18,14 @@ application.listen(port, () => {
 
 
 /*********************************************************
-* PR, PO, Invoice Status
+* PR, PO, ER, Invoice Status
 *********************************************************/
 application.post('/transaction/status', (req, res) => {
     let transaction = req.body.nlp.entities.transactionid ? req.body.nlp.entities.transactionid[0].raw: req.body.conversation.memory.transactionid;
     let transaction_upperCase = transaction.toUpperCase();
-    let documentType = (transaction_upperCase.startsWith('PR#') || transaction_upperCase.startsWith('REQUISITION#')) ? 'requisitions' : (transaction_upperCase.startsWith('PO#') || transaction_upperCase.startsWith('PURCHASEORDER#' )) ? 'purchase_orders' : 'invoices'
-    let transaction_id = transaction.replace('PR#', '').replace('pr#', '').replace('Requisition#', '').replace('PO#', '').replace('po#', '').replace('PurchaseOrder#', '').replace('Invoice#', '')
-    let queryFilter = documentType == 'requisitions' ? '?id=' : documentType == 'purchase_orders' ? '?po-number=' : '?invoice-number='
+    let documentType = (transaction_upperCase.startsWith('PR#') || transaction_upperCase.startsWith('REQUISITION#')) ? 'requisitions' : (transaction_upperCase.startsWith('PO#') || transaction_upperCase.startsWith('PURCHASEORDER#' )) ? 'purchase_orders' : (transaction_upperCase.startsWith('ER#') || transaction_upperCase.startsWith('EXPENSEREPORT#')) ? 'expense_reports' : 'invoices'
+    let transaction_id = transaction.replace('PR#', '').replace('pr#', '').replace('Requisition#', '').replace('PO#', '').replace('po#', '').replace('PurchaseOrder#', '').transaction.replace('ER#', '').transaction.replace('ExpenseReport#', '').replace('Invoice#', '')
+    let queryFilter = documentType == 'requisitions' ? '?id=' : documentType == 'purchase_orders' ? '?po-number=' : 'expense_reports' ? '?id=': '?invoice-number='
     console.log("/transaction/status");
     console.log("transaction: " + transaction);
     console.log("transaction_upperCase: " + transaction_upperCase);
